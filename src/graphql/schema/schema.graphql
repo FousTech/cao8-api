@@ -1,0 +1,435 @@
+type User {
+  id: ID!
+  email: String!
+  firstName: String
+  lastName: String
+  role: UserRole!
+  createdAt: String!
+  updatedAt: String!
+}
+
+enum UserRole {
+  ADMIN
+  STUDENT
+}
+
+type AuthPayload {
+  user: User!
+  token: String!
+  refreshToken: String!
+}
+
+type Student {
+  id: ID!
+  name: String!
+  email: String
+  createdAt: String!
+  updatedAt: String!
+  subjects: [StudentSubject!]!
+}
+
+type StudentSubject {
+  subject: Subject!
+  teacher: Teacher
+}
+
+type Teacher {
+  id: ID!
+  name: String!
+  createdAt: String!
+  updatedAt: String!
+  subjects: [TeacherSubject!]!
+}
+
+type TeacherSubject {
+  subject: Subject!
+  studentCount: Int!
+}
+
+type Subject {
+  id: ID!
+  name: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type ImportResult {
+  success: Boolean!
+  message: String!
+  totalRecords: Int!
+  newStudents: Int!
+  newTeachers: Int!
+  newSubjects: Int!
+  updatedRecords: Int!
+  duplicatesSkipped: Int!
+  errors: [String!]
+}
+
+enum ImportMode {
+  REPLACE
+  ADD
+}
+
+type Admin {
+  id: ID!
+  email: String!
+  firstName: String
+  lastName: String
+  role: UserRole!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type AdminsResult {
+  admins: [Admin!]!
+  total: Int!
+}
+
+type AdminOperationResult {
+  success: Boolean!
+  message: String!
+  admin: Admin
+}
+
+type ProfileUpdateResult {
+  success: Boolean!
+  message: String!
+  user: User
+}
+
+type StudentsResult {
+  students: [Student!]!
+  total: Int!
+  hasMore: Boolean!
+}
+
+type TeachersResult {
+  teachers: [Teacher!]!
+  total: Int!
+  hasMore: Boolean!
+}
+
+type SubjectsResult {
+  subjects: [Subject!]!
+  total: Int!
+  hasMore: Boolean!
+}
+
+type StudentWithSubjects {
+  id: ID!
+  name: String!
+  subjects: [Subject!]!
+}
+
+type AssignmentData {
+  subjects: [Subject!]!
+  students: [StudentWithSubjects!]!
+}
+
+type SubjectWithTeachers {
+  id: ID!
+  name: String!
+  teachers: [Teacher!]!
+}
+
+type StudentAssignmentData {
+  subjects: [SubjectWithTeachers!]!
+}
+
+type StudentTeacherSubjectAssignment {
+  id: ID!
+  student: Student!
+  teacher: Teacher
+  subject: Subject!
+}
+
+type QuestionnaireAssignmentData {
+  subjects: [Subject!]!
+  teachers: [Teacher!]!
+  students: [Student!]!
+  assignments: [StudentTeacherSubjectAssignment!]!
+}
+
+type Query {
+  me: User
+  exportData: String!
+  listAdmins: AdminsResult!
+  listStudents(index: Int!, nameFilter: String, teacherFilter: String, subjectFilter: String): StudentsResult!
+  listTeachers(index: Int!, nameFilter: String, subjectFilter: String): TeachersResult!
+  listSubjects(index: Int!, nameFilter: String): SubjectsResult!
+  getAssignmentData: AssignmentData!
+  getStudentAssignmentData: StudentAssignmentData!
+  getQuestionnaireAssignmentData(subjectId: ID, teacherId: ID): QuestionnaireAssignmentData!
+  # Questionnaire queries
+  listQuestionnaireGroups(index: Int!, nameFilter: String): QuestionnaireGroupsResult!
+  getQuestionnaireGroup(id: ID!): QuestionnaireGroup
+  listQuestionnaires(groupId: ID!, index: Int!, titleFilter: String, isActive: Boolean): QuestionnairesResult!
+  getQuestionnaire(id: ID!): Questionnaire
+  # Student queries
+  getStudentQuestionnaires: [StudentQuestionnaire!]!
+  # Results queries
+  getQuestionnaireResults(questionnaireId: ID!): QuestionnaireResults!
+}
+
+type SubjectOperationResult {
+  success: Boolean!
+  message: String!
+  subject: Subject
+}
+
+type TeacherOperationResult {
+  success: Boolean!
+  message: String!
+  teacher: Teacher
+}
+
+input TeacherAssignmentInput {
+  subjectId: ID!
+  studentIds: [ID!]!
+}
+
+input StudentAssignmentInput {
+  subjectId: ID!
+  teacherId: ID
+}
+
+type StudentOperationResult {
+  success: Boolean!
+  message: String!
+  student: Student
+}
+
+type QuestionnaireGroup {
+  id: ID!
+  name: String!
+  description: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Questionnaire {
+  id: ID!
+  groupId: String!
+  title: String!
+  description: String
+  isActive: Boolean!
+  isAnonymous: Boolean!
+  createdAt: String!
+  updatedAt: String!
+  questions: [Question!]
+  assignmentType: AssignmentType!
+  assignments: [QuestionnaireAssignment!]
+}
+
+type StudentQuestionnaire {
+  id: ID!
+  title: String!
+  description: String
+  isAnonymous: Boolean!
+  isSubmitted: Boolean!
+  createdAt: String!
+  questions: [Question!]
+  subject: Subject
+  teacher: Teacher
+}
+
+enum AssignmentType {
+  ALL_STUDENTS
+  SPECIFIC_STUDENTS
+}
+
+type QuestionnaireAssignment {
+  id: ID!
+  student: Student!
+  teacher: Teacher!
+  subject: Subject!
+}
+
+type Question {
+  id: ID!
+  questionnaireId: String!
+  text: String!
+  type: QuestionType!
+  required: Boolean!
+  orderIndex: Int!
+  createdAt: String!
+  updatedAt: String!
+  options: [QuestionOption!]
+}
+
+type QuestionOption {
+  id: ID!
+  questionId: String!
+  text: String!
+  orderIndex: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  FREE_TEXT
+  RATING
+  YES_NO
+}
+
+type QuestionnaireGroupsResult {
+  data: [QuestionnaireGroup!]!
+  total: Int!
+  hasMore: Boolean!
+}
+
+type QuestionnairesResult {
+  data: [Questionnaire!]!
+  total: Int!
+  hasMore: Boolean!
+}
+
+type QuestionnaireGroupOperationResult {
+  success: Boolean!
+  message: String!
+  group: QuestionnaireGroup
+}
+
+type QuestionnaireOperationResult {
+  success: Boolean!
+  message: String!
+  questionnaire: Questionnaire
+}
+
+input QuestionInput {
+  id: ID
+  text: String!
+  type: QuestionType!
+  required: Boolean
+  orderIndex: Int!
+  options: [QuestionOptionInput!]
+}
+
+input QuestionOptionInput {
+  id: ID
+  text: String!
+  orderIndex: Int!
+}
+
+input QuestionnaireResponseInput {
+  questionnaireId: ID!
+  subjectId: ID!
+  teacherId: ID
+  answers: [QuestionAnswerInput!]!
+}
+
+input QuestionAnswerInput {
+  questionId: ID!
+  answerText: String
+  answerOptionId: ID
+  answerRating: Int
+  answerBoolean: Boolean
+}
+
+type QuestionnaireResponseResult {
+  success: Boolean!
+  message: String!
+  responseId: ID
+}
+
+type QuestionnaireResults {
+  questionnaire: Questionnaire!
+  totalAssigned: Int!
+  totalResponded: Int!
+  responseRate: Float!
+  questionResults: [QuestionResult!]!
+}
+
+type QuestionResult {
+  question: Question!
+  totalResponses: Int!
+  # For multiple choice
+  optionCounts: [OptionCount!]
+  optionResponses: [OptionResponse!]
+  # For rating
+  averageRating: Float
+  ratingDistribution: [RatingCount!]
+  ratingResponses: [RatingResponse!]
+  # For yes/no
+  yesCount: Int
+  noCount: Int
+  yesNoResponses: [YesNoResponse!]
+  # For free text
+  textResponses: [TextResponse!]
+}
+
+type OptionCount {
+  option: QuestionOption!
+  count: Int!
+  percentage: Float!
+}
+
+type RatingCount {
+  rating: Int!
+  count: Int!
+  percentage: Float!
+}
+
+type TextResponse {
+  id: ID!
+  text: String!
+  respondentInfo: String # Will be null for anonymous
+  submittedAt: String!
+}
+
+type OptionResponse {
+  id: ID!
+  option: QuestionOption!
+  respondentInfo: String # Will be null for anonymous
+  submittedAt: String!
+}
+
+type RatingResponse {
+  id: ID!
+  rating: Int!
+  respondentInfo: String # Will be null for anonymous
+  submittedAt: String!
+}
+
+type YesNoResponse {
+  id: ID!
+  answer: Boolean!
+  respondentInfo: String # Will be null for anonymous
+  submittedAt: String!
+}
+
+type Mutation {
+  adminLogin(email: String!, password: String!): AuthPayload!
+  studentLogin(email: String!, password: String!): AuthPayload!
+  refreshToken(refreshToken: String!): AuthPayload!
+  logout: Boolean!
+  importData(data: String!, mode: ImportMode!): ImportResult!
+  deleteAllData: ImportResult!
+  createAdmin(email: String!, password: String!, firstName: String!, lastName: String!): AdminOperationResult!
+  deleteAdmin(id: ID!): AdminOperationResult!
+  updateAdminProfile(firstName: String!, lastName: String!, email: String!): ProfileUpdateResult!
+  createSubject(name: String!): SubjectOperationResult
+  updateSubject(id: ID!, name: String!): SubjectOperationResult
+  deleteSubject(id: ID!): SubjectOperationResult
+  deleteSubjects(ids: [ID!]!): SubjectOperationResult
+  createTeacher(name: String!, assignments: [TeacherAssignmentInput!]): TeacherOperationResult
+  updateTeacher(id: ID!, name: String!, assignments: [TeacherAssignmentInput!]): TeacherOperationResult
+  deleteTeacher(id: ID!): TeacherOperationResult
+  deleteTeachers(ids: [ID!]!): TeacherOperationResult
+  createStudent(name: String!, email: String, password: String, assignments: [StudentAssignmentInput!]): StudentOperationResult
+  updateStudent(id: ID!, name: String!, email: String, password: String, assignments: [StudentAssignmentInput!]): StudentOperationResult
+  deleteStudent(id: ID!): StudentOperationResult
+  deleteStudents(ids: [ID!]!): StudentOperationResult
+  # Questionnaire mutations
+  createQuestionnaireGroup(name: String!, description: String): QuestionnaireGroupOperationResult!
+  updateQuestionnaireGroup(id: ID!, name: String, description: String): QuestionnaireGroupOperationResult!
+  deleteQuestionnaireGroup(id: ID!): QuestionnaireGroupOperationResult!
+  createQuestionnaire(groupId: ID!, title: String!, description: String, isAnonymous: Boolean, questions: [QuestionInput!], assignmentType: AssignmentType!, assignmentIds: [ID!]): QuestionnaireOperationResult!
+  updateQuestionnaire(id: ID!, title: String, description: String, isActive: Boolean, isAnonymous: Boolean, questions: [QuestionInput!], assignmentType: AssignmentType, assignmentIds: [ID!]): QuestionnaireOperationResult!
+  deleteQuestionnaire(id: ID!): QuestionnaireOperationResult!
+  deleteQuestionnaires(ids: [ID!]!): QuestionnaireOperationResult!
+  duplicateQuestionnaire(id: ID!): QuestionnaireOperationResult!
+  # Response mutations
+  submitQuestionnaireResponse(input: QuestionnaireResponseInput!): QuestionnaireResponseResult!
+}
