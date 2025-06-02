@@ -19,5 +19,7 @@ export const entityResolvers = {
   QuestionnaireGroup: questionnaireResolvers.QuestionnaireGroup,
   Questionnaire: questionnaireResolvers.Questionnaire,
   Question: questionnaireResolvers.Question,
-  QuestionOption: questionnaireResolvers.QuestionOption
+  QuestionOption: questionnaireResolvers.QuestionOption,
+  StudentQuestionnaire: questionnaireResolvers.StudentQuestionnaire,
+  TextResponse: questionnaireResolvers.TextResponse
 };

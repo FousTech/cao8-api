@@ -46,7 +46,7 @@ export class QuestionnaireOptimizedService {
         allAssignments.push(...batchAssignments)
       }
 
-      hasMore = batchAssignments && batchAssignments.length === batchSize && count && count > offset + batchSize
+      hasMore = Boolean(batchAssignments && batchAssignments.length === batchSize && count && count > offset + batchSize)
       offset += batchSize
     }
 

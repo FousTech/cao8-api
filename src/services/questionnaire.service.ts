@@ -29,7 +29,7 @@ export class QuestionnaireService {
     }
 
     return {
-      data: data || [],
+      items: data || [],
       total: count || 0,
       hasMore: (count || 0) > offset + limit
     }
@@ -123,7 +123,7 @@ export class QuestionnaireService {
     }
 
     return {
-      data: data || [],
+      items: data || [],
       total: count || 0,
       hasMore: (count || 0) > offset + limit
     }
@@ -736,7 +736,7 @@ export class QuestionnaireService {
         if (!studentAssignmentsError && studentAssignments && studentAssignments.length > 0) {
           // Create a questionnaire entry for each subject-teacher combination
           for (const assignment of studentAssignments) {
-            const submissionKey = `${questionnaire.id}-${assignment.subject.id}-${assignment.teacher?.id || 'null'}`
+            const submissionKey = `${questionnaire.id}-${(assignment as any).subject.id}-${(assignment as any).teacher?.id || 'null'}`
             availableQuestionnaires.push({
               id: questionnaire.id,
               title: questionnaire.title,
@@ -745,8 +745,8 @@ export class QuestionnaireService {
               isSubmitted: submittedSet.has(submissionKey),
               createdAt: questionnaire.created_at,
               questions: questionnaire.questions,
-              subject: assignment.subject,
-              teacher: assignment.teacher
+              subject: (assignment as any).subject,
+              teacher: (assignment as any).teacher
             })
           }
         }
@@ -768,7 +768,7 @@ export class QuestionnaireService {
         if (!assignmentError && assignments && assignments.length > 0) {
           // Add questionnaire with the specific subject-teacher info
           for (const assignment of assignments) {
-            const submissionKey = `${questionnaire.id}-${assignment.student_teacher_subjects.subject.id}-${assignment.student_teacher_subjects.teacher?.id || 'null'}`
+            const submissionKey = `${questionnaire.id}-${(assignment.student_teacher_subjects as any).subject.id}-${(assignment.student_teacher_subjects as any).teacher?.id || 'null'}`
             availableQuestionnaires.push({
               id: questionnaire.id,
               title: questionnaire.title,
@@ -777,8 +777,8 @@ export class QuestionnaireService {
               isSubmitted: submittedSet.has(submissionKey),
               createdAt: questionnaire.created_at,
               questions: questionnaire.questions,
-              subject: assignment.student_teacher_subjects.subject,
-              teacher: assignment.student_teacher_subjects.teacher
+              subject: (assignment.student_teacher_subjects as any).subject,
+              teacher: (assignment.student_teacher_subjects as any).teacher
             })
           }
         }

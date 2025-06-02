@@ -141,6 +141,9 @@ export class AuthService {
         // If user doesn't exist in auth.users, create them
         if (authError.message.includes('Invalid login credentials')) {
           // Create user in Supabase Auth
+          if (!supabaseAdmin) {
+            throw new Error('Admin authentication not configured');
+          }
           const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
             email,
             password,
@@ -168,7 +171,9 @@ export class AuthService {
 
           if (profileError) {
             // Rollback user creation
-            await supabaseAdmin.auth.admin.deleteUser(newUser.user.id);
+            if (supabaseAdmin) {
+              await supabaseAdmin.auth.admin.deleteUser(newUser.user.id);
+            }
             throw profileError;
           }
 

@@ -4,6 +4,12 @@ export interface PaginationArgs {
   index: number;
 }
 
+export interface PaginationParams {
+  offset?: number;
+  limit?: number;
+  [key: string]: any; // Allow additional filter properties
+}
+
 export interface PaginatedResult<T> {
   items: T[];
   total: number;

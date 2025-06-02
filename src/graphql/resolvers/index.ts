@@ -21,5 +21,7 @@ export const resolvers = {
   ...(entityResolvers.QuestionnaireGroup && { QuestionnaireGroup: entityResolvers.QuestionnaireGroup }),
   ...(entityResolvers.Questionnaire && { Questionnaire: entityResolvers.Questionnaire }),
   ...(entityResolvers.Question && { Question: entityResolvers.Question }),
-  ...(entityResolvers.QuestionOption && { QuestionOption: entityResolvers.QuestionOption })
+  ...(entityResolvers.QuestionOption && { QuestionOption: entityResolvers.QuestionOption }),
+  ...(entityResolvers.StudentQuestionnaire && { StudentQuestionnaire: entityResolvers.StudentQuestionnaire }),
+  ...(entityResolvers.TextResponse && { TextResponse: entityResolvers.TextResponse })
 }

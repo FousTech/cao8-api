@@ -11,7 +11,7 @@ dotenv.config()
 async function startServer() {
   const server = new ApolloServer<Context>({
     typeDefs,
-    resolvers,
+    resolvers: resolvers as any,
   })
 
   const { url } = await startStandaloneServer(server, {

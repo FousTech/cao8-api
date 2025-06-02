@@ -192,12 +192,11 @@ export class StudentService {
     if (email && password && supabaseAdmin) {
       try {
         // First check if auth user already exists
-        const { data: { users: existingUsers } } = await supabaseAdmin.auth.admin.listUsers({
-          filter: `email.eq.${email}`,
-          perPage: 1
-        });
+        // Note: We need to search through users as there's no direct getUserByEmail method
+        const { data: { users } } = await supabaseAdmin.auth.admin.listUsers();
+        const existingUser = users.find(u => u.email === email);
 
-        if (existingUsers && existingUsers.length > 0) {
+        if (existingUser) {
           // Rollback student creation
           await client.from('students').delete().eq('id', student.id);
           return {
@@ -362,13 +361,12 @@ export class StudentService {
         let authUserId: string | null = null;
         
         if (existingStudent.email) {
-          const { data: { users } } = await supabaseAdmin.auth.admin.listUsers({
-            filter: `email.eq.${existingStudent.email}`,
-            perPage: 1
-          });
+          // Search through users to find one with matching email
+          const { data: { users } } = await supabaseAdmin.auth.admin.listUsers();
+          const existingUser = users.find(u => u.email === existingStudent.email);
           
-          if (users && users.length > 0) {
-            authUserId = users[0].id;
+          if (existingUser) {
+            authUserId = existingUser.id;
           }
         }
         
@@ -552,13 +550,12 @@ export class StudentService {
     // Delete auth account if exists
     if (student.email && supabaseAdmin) {
       try {
-        const { data: { users } } = await supabaseAdmin.auth.admin.listUsers({
-          filter: `email.eq.${student.email}`,
-          perPage: 1
-        });
+        // Search through users to find one with matching email
+        const { data: { users } } = await supabaseAdmin.auth.admin.listUsers();
+        const existingUser = users.find(u => u.email === student.email);
         
-        if (users && users.length > 0) {
-          const authUserId = users[0].id;
+        if (existingUser) {
+          const authUserId = existingUser.id;
           
           // Delete profile first
           await client.from('profiles').delete().eq('id', authUserId);

@@ -19,7 +19,7 @@ const questionnaireResolvers: IResolvers<any, Context> = {
       })
 
       return {
-        data: result.data,
+        data: result.items,
         total: result.total,
         hasMore: result.hasMore
       }
@@ -44,7 +44,7 @@ const questionnaireResolvers: IResolvers<any, Context> = {
       })
 
       return {
-        data: result.data,
+        data: result.items,
         total: result.total,
         hasMore: result.hasMore
       }
