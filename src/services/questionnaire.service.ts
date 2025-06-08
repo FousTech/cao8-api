@@ -743,7 +743,7 @@ export class QuestionnaireService {
               description: questionnaire.description,
               isAnonymous: questionnaire.is_anonymous,
               isSubmitted: submittedSet.has(submissionKey),
-              createdAt: questionnaire.created_at,
+              created_at: questionnaire.created_at,
               questions: questionnaire.questions,
               subject: (assignment as any).subject,
               teacher: (assignment as any).teacher
@@ -775,7 +775,7 @@ export class QuestionnaireService {
               description: questionnaire.description,
               isAnonymous: questionnaire.is_anonymous,
               isSubmitted: submittedSet.has(submissionKey),
-              createdAt: questionnaire.created_at,
+              created_at: questionnaire.created_at,
               questions: questionnaire.questions,
               subject: (assignment.student_teacher_subjects as any).subject,
               teacher: (assignment.student_teacher_subjects as any).teacher
