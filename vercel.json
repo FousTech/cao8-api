@@ -1,18 +1,17 @@
 {
   "functions": {
-    "index.js": {
-      "maxDuration": 30
+    "api/graphql.ts": {
+      "maxDuration": 10
     }
   },
-  "routes": [
+  "rewrites": [
     {
-      "src": "/graphql",
-      "dest": "/index.js",
-      "methods": ["GET", "POST", "OPTIONS"]
+      "source": "/graphql",
+      "destination": "/api/graphql"
     },
     {
-      "src": "/",
-      "dest": "/index.js"
+      "source": "/(.*)",
+      "destination": "/api/graphql"
     }
   ]
 }

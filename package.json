@@ -2,7 +2,7 @@
   "name": "dotazniky-api",
   "version": "1.0.0",
   "description": "GraphQL API for student questionnaire system",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon --exec tsx src/index.ts",
     "build": "tsc",
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@apollo/server": "^4.10.0",
+    "@as-integrations/next": "^3.2.0",
     "@supabase/supabase-js": "^2.39.3",
     "@types/bcryptjs": "^2.4.6",
     "bcryptjs": "^3.0.2",
