@@ -13,17 +13,25 @@ require('dotenv').config();
 
 const app = express();
 
+let serverStarted = false;
+
 async function startServer() {
+  if (serverStarted) return;
+  
   const server = new ApolloServer({
     typeDefs,
     resolvers,
   });
 
   await server.start();
+  serverStarted = true;
 
   app.use(
-    '/',
-    cors(),
+    '/graphql',
+    cors({
+      origin: ['https://cao8-site.vercel.app', 'http://localhost:3001'],
+      credentials: true
+    }),
     json(),
     expressMiddleware(server, {
       context: async ({ req }) => {
@@ -88,8 +96,14 @@ async function startServer() {
       },
     })
   );
+
+  // Health check endpoint
+  app.get('/', (req, res) => {
+    res.json({ message: 'GraphQL API is running', endpoint: '/graphql' });
+  });
 }
 
-startServer();
+// Initialize server
+startServer().catch(console.error);
 
 module.exports = app;
