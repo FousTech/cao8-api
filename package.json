@@ -5,7 +5,6 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon --exec tsx src/index.ts",
-    "build": "tsc",
     "start": "node dist/index.js"
   },
   "dependencies": {
